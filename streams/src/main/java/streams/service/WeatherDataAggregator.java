@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import model.WeatherData;
+import model.WeatherMeasurement;
 import model.WeatherDataAggregation;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;
@@ -26,7 +26,7 @@ import java.util.function.Function;
 public class WeatherDataAggregator {
 
     @Bean
-    public Function<KStream<Long, WeatherData>, KStream<Long, WeatherDataAggregation>> aggregateWeather() {
+    public Function<KStream<Long, WeatherMeasurement>, KStream<Long, WeatherDataAggregation>> aggregateWeather() {
         return input -> input
                 .groupByKey()
                 .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofSeconds(5)))
@@ -52,17 +52,17 @@ public class WeatherDataAggregator {
     }
 
     private IntermediateAggregationState agg(Long id,
-                                             WeatherData weatherData,
+                                             WeatherMeasurement weatherMeasurement,
                                              IntermediateAggregationState aggregation) {
-        log.debug("Aggregation incoming messages [{}]", weatherData);
+        log.debug("Aggregation incoming messages [{}]", weatherMeasurement);
         Integer tempCount = aggregation.getTempCount();
         Double humCount = aggregation.getHumCount();
         Double humSum = aggregation.getHumSum();
         Double tempSum = aggregation.getTempSum();
         tempCount++;
-        tempSum += weatherData.getTemperatureCelsius().doubleValue();
+        tempSum += weatherMeasurement.getTemperatureCelsius().doubleValue();
         humCount++;
-        humSum += weatherData.getHumidity();
+        humSum += weatherMeasurement.getHumidity();
 
         return IntermediateAggregationState.builder()
                 .humCount(humCount)

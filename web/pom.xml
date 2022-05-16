@@ -52,6 +52,19 @@
             <classifier>test-binder</classifier>
             <type>test-jar</type>
         </dependency>
+        <dependency>
+            <groupId>tema.kafka</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+        </dependency>
+
+
     </dependencies>
     <dependencyManagement>
         <dependencies>

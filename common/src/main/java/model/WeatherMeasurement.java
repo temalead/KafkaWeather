@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class WeatherData {
+public class WeatherMeasurement {
+    private Long id;
     private Integer temperatureCelsius;
     private Double humidity;
 
