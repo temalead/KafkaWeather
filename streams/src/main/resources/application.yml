@@ -1,0 +1,32 @@
+spring:
+  cloud:
+    stream:
+      bindings:
+        aggregateWeather-in-0:
+          destination: weather-data
+        aggregateWeather-out-0:
+          destination: agg-weather-data
+        alarmProcessor-in-0:
+          destination: agg-weather-data
+        alarmProcessor-out-0:
+          destination: weather-alarms
+      kafka:
+        streams:
+          binder:
+            configuration:
+              default:
+                timestamp:
+                  extractor: streams.service.WeatherDataTimestampExtractor
+            functions:
+              aggregateWeather:
+                application-id: aggregateWeather-0.0.2
+              alarmProcessor:
+                application-id: alarmProcessor-0.0.1
+            function:
+              definition: aggregateWeather;alarmProcessor
+logging:
+  level:
+    org:
+      apache:
+        kafka:
+          streams: debug

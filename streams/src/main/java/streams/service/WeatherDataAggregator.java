@@ -29,9 +29,9 @@ public class WeatherDataAggregator {
     public Function<KStream<Long, WeatherData>, KStream<Long, WeatherDataAggregation>> aggregateWeather() {
         return input -> input
                 .groupByKey()
-                .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofSeconds(5)))//duration of windows
+                .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofSeconds(5)))
                 .aggregate(this::init, this::agg, Materialized.with(Serdes.Long(), new JsonSerde<>(IntermediateAggregationState.class)))
-                .suppress(Suppressed.untilWindowCloses(Suppressed.BufferConfig.unbounded())) //wait until windows will be closed
+                .suppress(Suppressed.untilWindowCloses(Suppressed.BufferConfig.unbounded()))
                 .toStream()
                 .map(this::calcAvg);
     }
