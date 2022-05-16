@@ -1,5 +1,7 @@
 spring:
   cloud:
+    function:
+      definition: aggregateWeather;alarmProcessor
     stream:
       bindings:
         aggregateWeather-in-0:
@@ -13,6 +15,7 @@ spring:
       kafka:
         streams:
           binder:
+            replicationFactor: 1
             configuration:
               default:
                 timestamp:
@@ -22,8 +25,7 @@ spring:
                 application-id: aggregateWeather-0.0.2
               alarmProcessor:
                 application-id: alarmProcessor-0.0.1
-            function:
-              definition: aggregateWeather;alarmProcessor
+
 logging:
   level:
     org:

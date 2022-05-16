@@ -25,7 +25,7 @@ public class MeasurementGenerator {
     private final String URL = "http://localhost:8080/api/v1/weather";
 
 
-    @Scheduled(fixedRate = 200)
+    @Scheduled(fixedRate = 1000)
     public void postRequest() {
         createRequest();
     }
