@@ -1,34 +1,33 @@
 spring:
   cloud:
-    function:
-      definition: aggregateWeather;alarmProcessor
     stream:
       bindings:
-        aggregateWeather-in-0:
+        averageProcessor-in-0:
           destination: weather-data
-        aggregateWeather-out-0:
-          destination: agg-weather-data
-        alarmProcessor-in-0:
-          destination: agg-weather-data
-        alarmProcessor-out-0:
-          destination: weather-alarms
+        averageProcessor-out-0:
+          destination: weather-agg
+        alertsProcessor-in-0:
+          destination: weather-agg
       kafka:
+        binder:
+          brokers: localhost:9092
         streams:
           binder:
-            replicationFactor: 1
             configuration:
+              processing:
+                guarantee: exactly_once
               default:
                 timestamp:
-                  extractor: streams.service.WeatherDataTimestampExtractor
+                  extractor: streams.service.WeatherTimestampExtractor
             functions:
-              aggregateWeather:
-                application-id: aggregateWeather-0.0.2
-              alarmProcessor:
-                application-id: alarmProcessor-0.0.1
-
+              averageProcessor:
+                applicationId: averageProcessor-v1
+              alertsProcessor:
+                applicationId: alertsProcessor-v1
+    function:
+      definition: averageProcessor;alertsProcessor;
 logging:
   level:
-    org:
-      apache:
-        kafka:
-          streams: debug
+    org.apache.kafka.streams: DEBUG
+server:
+  port: 8081

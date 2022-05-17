@@ -23,10 +23,10 @@ import java.util.function.Function;
 
 @Configuration
 @Slf4j
-public class WeatherDataAggregator {
+public class AverageProcessorConfig {
 
     @Bean
-    public Function<KStream<Long, WeatherMeasurement>, KStream<Long, WeatherDataAggregation>> aggregateWeather() {
+    public Function<KStream<Long, WeatherMeasurement>, KStream<Long, WeatherDataAggregation>> averageProcessor() {
         return input -> input
                 .groupByKey()
                 .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofSeconds(5)))

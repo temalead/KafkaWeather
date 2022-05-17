@@ -5,7 +5,6 @@ import model.WeatherDataAggregation;
 import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
 
@@ -13,13 +12,13 @@ import java.util.function.Function;
 
 @Configuration
 @Slf4j
-public class WeatherAlarmProcessor {
+public class AlertsProcessorConfig {
 
-    private static final Double TEMPERATURE_ALARM_THRESHOLD = 33.0;
+    private static final Double TEMPERATURE_ALARM_THRESHOLD = 0.0;
     private static final Double HUMIDITY_ALARM_THRESHOLD = 50.0;
 
     @Bean
-    public Function<KStream<Long, WeatherDataAggregation>, KStream<Long, WeatherDataAggregation>> alarmProcessor() {
+    public Function<KStream<Long, WeatherDataAggregation>, KStream<Long, WeatherDataAggregation>> alertsProcessor() {
         return input ->
                 input.filter(this::thresholdReached);
 
