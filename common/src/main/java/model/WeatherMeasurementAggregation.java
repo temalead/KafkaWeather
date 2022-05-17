@@ -10,7 +10,7 @@ import java.time.Instant;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class WeatherDataAggregation implements KafkaTimedMessage {
+public class WeatherMeasurementAggregation implements KafkaTimedMessage {
     private Long id;
     private Instant timestamp;
     private Double avgTempCelsius;

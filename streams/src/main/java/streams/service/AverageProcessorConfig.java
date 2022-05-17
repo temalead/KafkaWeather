@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import model.WeatherMeasurement;
-import model.WeatherDataAggregation;
+import model.WeatherMeasurementAggregation;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KStream;
@@ -16,6 +16,8 @@ import org.apache.kafka.streams.kstream.TimeWindows;
 import org.apache.kafka.streams.kstream.Windowed;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.support.serializer.JsonSerde;
 
 import java.time.Duration;
@@ -26,7 +28,7 @@ import java.util.function.Function;
 public class AverageProcessorConfig {
 
     @Bean
-    public Function<KStream<Long, WeatherMeasurement>, KStream<Long, WeatherDataAggregation>> averageProcessor() {
+    public Function<KStream<Long, WeatherMeasurement>, KStream<Long, WeatherMeasurementAggregation>> averageProcessor() {
         return input -> input
                 .groupByKey()
                 .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofSeconds(5)))
@@ -36,11 +38,11 @@ public class AverageProcessorConfig {
                 .map(this::calcAvg);
     }
 
-    private KeyValue<Long, WeatherDataAggregation> calcAvg(Windowed<Long> window, IntermediateAggregationState aggregationState) {
+    private KeyValue<Long, WeatherMeasurementAggregation> calcAvg(Windowed<Long> window, IntermediateAggregationState aggregationState) {
         Double avgHum = aggregationState.getHumCount() / aggregationState.getTempCount();
         Double avgTemp = aggregationState.getTempSum() / aggregationState.getTempCount();
 
-        WeatherDataAggregation statistics = new WeatherDataAggregation(window.key(),
+        WeatherMeasurementAggregation statistics = new WeatherMeasurementAggregation(window.key(),
                 window.window().endTime(),
                 avgTemp,
                 avgHum);

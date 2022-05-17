@@ -13,9 +13,8 @@ spring:
           brokers: localhost:9092
         streams:
           binder:
+            replicationFactor: 1
             configuration:
-              processing:
-                guarantee: exactly_once
               default:
                 timestamp:
                   extractor: streams.service.WeatherTimestampExtractor
